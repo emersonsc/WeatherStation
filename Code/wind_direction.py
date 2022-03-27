@@ -56,10 +56,7 @@ def get_value(length=5):
     
     while time.time() - start_time <= length:
         wind = round(adc.value * 3.3,1)
-        #if not wind in volts:
-            #print('unknown value ' + str(wind))
-        #else:
-            #data.append(volts[wind])
+        
         if wind in volts:
             data.append(volts[wind])
             
