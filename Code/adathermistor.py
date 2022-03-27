@@ -1,42 +1,3 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft for Adafruit Industries
-#
-# SPDX-License-Identifier: MIT
-
-"""
-`adafruit_thermistor`
-===========================================================
-
-A thermistor is a resistor that varies with temperature. This driver takes the
-parameters of that resistor and its series resistor to determine the current
-temperature. To hook one up, connect an analog input pin to the connection
-between the resistor and the thermistor.  Be careful to note if the thermistor
-is connected on the high side (from analog input up to high logic level/3.3 or
-5 volts) or low side (from analog input down to ground).  The initializer takes
-an optional high_side boolean that defaults to True and indicates if that the
-thermistor is connected on the high side vs. low side.
-
-* Author(s): Scott Shawcroft
-
-Implementation Notes
---------------------
-
-**Hardware:**
-
-* Adafruit `10K Precision Epoxy Thermistor - 3950 NTC <https://www.adafruit.com/products/372>`_
-  (Product ID: 372)
-
-* Adafruit `Circuit Playground Express <https://www.adafruit.com/products/3333>`_
-  (Product ID: 3333)
-
-**Software and Dependencies:**
-
-* Adafruit CircuitPython firmware: https://github.com/adafruit/circuitpython/releases
-
-**Notes:**
-
-#. Check the datasheet of your thermistor for the values.
-"""
-
 from gpiozero import MCP3008
 from time import sleep
 import math
@@ -63,44 +24,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Thermistor.git"
 
 
 class Thermistor:
-    """
-    :param ~microcontroller.Pin pin: Analog pin used for the thermistor
-    :param int series_resistor: resistance in series between you analog input and the
-     thermistor, normally a 10K resistor is placed between VCC and the analog pin
-    :param int nominal_resistance: nominal resistance of the thermistor. normally 10k
-    :param int b_coefficient: thermistor's B coefficient. Typically this is a value in
-     the range of 3000-4000
-    :param bool high_side: indicates if the thermistor is connected on the high side or
-     low side of the resistor. Defaults to `True`
-
-
-    **Quickstart: Importing and using the adafruit_thermistor library**
-
-        Here is one way of importing the `Thermistor` class so you can use it
-        with the name ``thermistor``.
-        First you will need to import the libraries to use the sensor
-
-        .. code-block:: python
-
-            import board
-            import adafruit_thermistor
-
-        Once this is done you can define your `Thermistor` object and define your sensor object
-
-        .. code-block:: python
-
-            thermistor = adafruit_thermistor.Thermistor(board.A0, 10000, 10000, 25, 3950)
-
-        Now you have access to the temperature with the :attr:`temperature` attribute.
-        This temperature is in Celsius.
-
-
-        .. code-block:: python
-
-            temperature = thermistor.temperature
-
-    """
-
+    
     def __init__(
         self,
         pin,
