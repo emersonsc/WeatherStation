@@ -10,7 +10,7 @@ import math
 import bme280_sensor
 import wind_direction
 import statistics
-#import ds18b20_therm
+import ds18b20_therm
 import database
 import tenktherm
 import json
@@ -38,7 +38,7 @@ CM_IN_A_KM = 100000.0
 SECS_IN_AN_HOUR = 3600
 
 # initialize ground temp probe
-#temp_probe = ds18b20_therm.DS18B20()
+temp_probe = ds18b20_therm.DS18B20()
 
 # define wind speed and direction lists
 store_speeds = []
@@ -52,7 +52,7 @@ ADJUSTMENT = 1.18
 interval = 60
 rain_count = 0
 cpu = CPUTemperature()
-#BUCKET_SIZE = 0.011
+
 
 # MQTT
 def on_connect(client, userdata, flags, rc):
@@ -109,10 +109,6 @@ def reset_wind():
         wind_count = 0
 
 
-        
-#def reset_gust():
-        #global gust
-        #gust = 0
 
 wind_speed_sensor = Button(16)
 wind_speed_sensor.when_activated = spin
@@ -145,12 +141,12 @@ if __name__ == '__main__':
                         final_speed = calculate_speed(wind_interval)
                         store_speeds.append(final_speed)
 
-                #wind_average = wind_direction.get_average(store_directions)
+                wind_average = wind_direction.get_average(store_directions)
                 wind_gust_speed = (max(store_speeds))
                 wind_speed = (statistics.mean(store_speeds))
                 rainfall = rain_count * BUCKET_SIZE 
-                #print("Read Ground Temp"
-                #ground_temp = temp_probe.read_temp()
+                print("Read Ground Temp"
+                ground_temp = temp_probe.read_temp()
                 print("Read Air Conditions")
                 humidity, pressure, ambient_temp = bme280_sensor.read_all()
                 bat_temp = tenktherm.read_all()
@@ -159,28 +155,28 @@ if __name__ == '__main__':
                 # Round all Values
                 wind_gust_speed = round(wind_gust_speed, 2)
                 wind_speed = round(wind_speed, 2)
-                #wind_dir = round(wind_dir)
+                wind_dir = round(wind_dir)
                 humidity = round(humidity, 2)
                 pressure = round(pressure, 2)
                 ambient_temp = round(ambient_temp, 2)
-                #ground_temp = round(ground_temp, 2)
+                ground_temp = round(ground_temp, 2)
                 dewpoint = round(dewpoint, 2)
                 bat_temp = round(bat_temp, 2)
                 cpu_temp = round(cpu.temperature, 2)
                 
-                print(wind_speed, wind_gust_speed, rainfall, humidity, pressure, ambient_temp, dewpoint, bat_temp) #  ADD ground_temp BACK
+                print(wind_average, wind_speed, wind_gust_speed, rainfall, humidity, pressure, ambient_temp, ground_temp, dewpoint, bat_temp)
                 ambient_temp_str = "{0:.2f}".format(ambient_temp)
-                #ground_temp_str = "{0:.2f}".format(ground_temp)
+                ground_temp_str = "{0:.2f}".format(ground_temp)
                 humidity_str = "{0:.2f}".format(humidity)
                 pressure_str = "{0:.2f}".format(pressure)
                 wind_speed_str = "{0:.2f}".format(wind_speed)
                 wind_gust_str = "{0:.2f}".format(wind_gust_speed)
-                #wind_average_str = str(wind_average)
+                wind_average_str = str(wind_average)
                 rainfall_str = "{0:.2f}".format(rainfall)
                 dewpoint_str = "{0:.2f}".format(dewpoint)
                 WUurl = "https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?"
-                WU_station_id = "KMIHOWEL133" # Replace XXXX with your PWS ID
-                WU_station_pwd = "trtjbtAo" # Replace YYYY with your Password
+                WU_station_id = "XXXX" # Replace XXXX with your PWS ID
+                WU_station_pwd = "YYYY" # Replace YYYY with your Password
                 WUcreds = "ID=" + WU_station_id + "&PASSWORD="+ WU_station_pwd
                 date_str = "&dateutc=now"
                 action_str = "&action=updateraw"
@@ -194,8 +190,8 @@ if __name__ == '__main__':
                 "&windgustmph="  + wind_gust_str +
                 "&tempf=" + ambient_temp_str +
                 "&rainin=" + rainfall_str +
-                #"&soiltempf=" + ground_temp_str +
-                #"&winddir=" + wind_average_str +
+                "&soiltempf=" + ground_temp_str +
+                "&winddir=" + wind_average_str +
                 "&dewptf=" + dewpoint_str +
                 action_str)
                 print("Received " + str(r.status_code) + " " + str(r.text))
@@ -208,11 +204,11 @@ if __name__ == '__main__':
                         'wind_speed': wind_speed,
                         'wind_gust_speed': wind_gust_speed,
                         'rainfall': rainfall,
-                        #'wind_direction': wind_dir,
+                        'wind_direction': wind_dir,
                         'humidity': humidity,
                         'pressure': pressure,
                         'ambient_temp': ambient_temp,
-                        #'ground_temp': ground_temp,
+                        'ground_temp': ground_temp,
                         'dewpoint': dewpoint,
                         'last_message': last_message,
                         'cpu_temp': cpu_temp,
